@@ -2,7 +2,9 @@ new Vue({
   el: "#app",
   data: function () {
     return {
+      originData: [],
       tableData: [],
+      isCheckOverTime: false,
       columns: [
         {
           label: "日期",
@@ -50,6 +52,7 @@ new Vue({
       const res = beginParse(event.raw)
         .then((res) => {
           this.tableData = res;
+          this.originData = res;
           loading.close();
         })
         .catch((e) => {
@@ -57,20 +60,45 @@ new Vue({
           this.$message.error("解析失败了");
         });
     },
+    handleCheckOverTime() {
+      this.isCheckOverTime = !this.isCheckOverTime;
+      this.tableData = this.originData.filter((o) => {
+        if (this.isCheckOverTime) {
+          return o.timeDifference >= 1;
+        }
+        return true;
+      });
+    },
+    /**
+     * 总计
+     * @param {*} param
+     * @returns
+     */
     getSummaries(param) {
       const { columns, data } = param;
       let sums = [];
       let totalPrice = 0;
       let totalHour = 0;
+      let isNoSignStartTime = false; //上班有漏卡
+      let isNoSignEndTime = false; //下班有漏卡
       data.forEach((item, index) => {
         totalPrice += item.price;
-        if (!isNaN(parseInt(item.timeDifference)))
+        if (!isNaN(parseInt(item.timeDifference))) {
           if (item.timeDifference >= 1) {
             totalHour += item.timeDifference * 1;
           }
+        }
+        if (item.actualEndTime === "--") {
+          isNoSignEndTime = true;
+        }
+        if (item.startTime === "--") {
+          isNoSignStartTime = true;
+        }
       });
       sums.length = columns.length;
       sums[0] = "合计";
+      if (isNoSignStartTime) sums[1] = "上班有漏卡";
+      if (isNoSignEndTime) sums[3] = "下班有漏卡";
       sums[5] = `加班总工时：【${totalHour}】`;
       sums[6] = `加班费：【${totalPrice}】`;
       return sums;
