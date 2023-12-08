@@ -76,7 +76,7 @@
 
             <span v-else-if="col.id === 'timeDifference'">
               <el-tag
-                v-if="scope.row.timeDifference > 1"
+                v-if="scope.row.timeDifference >= 1"
                 effect="dark"
                 type="success"
                 >{{scope.row.timeDifference}}</el-tag
