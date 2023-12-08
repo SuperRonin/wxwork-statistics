@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- 引入样式 -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script
+    lang="javascript"
+    src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+  <script src="https://unpkg.com/vue@2/dist/vue.js"></script>
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="./lib/index.js"></script>
+  <body>
+    <div id="app">
+      <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <el-upload
+          drag
+          action=""
+          class="upload-demo"
+          :on-change="handleSelectFile"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          <div slot="tip" class="el-upload__tip">
+            <p>手机端企微：【打卡】【右下角统计】【右上角导出】</p>
+          </div>
+        </el-upload>
+      </div>
+      <div
+        v-if="tableData && tableData.length"
+        class="fixed right-2 top-1/2 w-8 h-300px text-center text-white bg-violet-500 py-4 px-2 rounded z-10 cursor-pointer hover:bg-violet-600"
+        @click="tableData = []"
+      >
+        重新解析
+      </div>
+
+      <el-table
+        v-if="tableData && tableData.length"
+        :data="tableData"
+        width="80%"
+        height="100vh"
+        show-summary
+        :summary-method="getSummaries"
+        border
+        stripe
+      >
+        <el-table-column
+          align="center"
+          v-for="col in columns"
+          :prop="col.id"
+          :key="col.id"
+          :label="col.label"
+          sortable
+        >
+          <template slot-scope="scope">
+            <span v-if="col.id === 'isLeaveEarly'">
+              <el-tag v-if="scope.row.isLeaveEarly" type="danger">是</el-tag>
+              <el-tag v-else type="success">否</el-tag>
+            </span>
+
+            <span v-else-if="col.id === 'timeDifference'">
+              <el-tag
+                v-if="scope.row.timeDifference > 1"
+                effect="dark"
+                type="success"
+                >{{scope.row.timeDifference}}</el-tag
+              >
+              <el-tag v-else type="info">{{scope.row.timeDifference}}</el-tag>
+            </span>
+            <span v-else>{{ scope.row[col.id] }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>
