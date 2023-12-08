@@ -65,7 +65,7 @@ new Vue({
       data.forEach((item, index) => {
         totalPrice += item.price;
         if (!isNaN(parseInt(item.timeDifference)))
-          if (item.timeDifference > 1) {
+          if (item.timeDifference >= 1) {
             totalHour += item.timeDifference * 1;
           }
       });
