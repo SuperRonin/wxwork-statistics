@@ -1,8 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
     <title>考勤报告</title>
     <!-- 引入样式 -->
     <link
@@ -42,6 +41,12 @@
           </div>
         </el-upload>
       </div>
+      <div
+        v-if="tableData && tableData.length"
+        class="fixed right-2 top-1/2 w-8 h-300px text-center text-white bg-violet-500 py-4 px-2 rounded z-10 cursor-pointer hover:bg-violet-600"
+        @click="tableData = []"
+      >
+        重新解析
       <div v-if="tableData && tableData.length">
         <div
           class="fixed right-2 top-1/2 w-8 h-300px text-center text-white bg-violet-500 py-4 px-2 rounded z-10 cursor-pointer hover:bg-violet-600 select-none"
