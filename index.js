@@ -57,7 +57,7 @@ new Vue({
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)",
       });
-      const res = beginParse(event.raw)
+      beginParse(event.raw)
         .then((res) => {
           this.tableData = res;
           this.originData = res;
@@ -72,7 +72,7 @@ new Vue({
       this.isCheckOverTime = !this.isCheckOverTime;
       this.tableData = this.originData.filter((o) => {
         if (this.isCheckOverTime) {
-          return o.timeDifference >= 1;
+          return o.timeDifference >= 1 || o.isOffDayWork;
         }
         return true;
       });
