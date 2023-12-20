@@ -99,8 +99,8 @@ new Vue({
       sums[0] = "合计";
       if (isNoSignStartTime) sums[1] = "上班有漏卡";
       if (isNoSignEndTime) sums[3] = "下班有漏卡";
-      sums[5] = `加班总工时：【${totalHour}】`;
-      sums[6] = `加班费：【${totalPrice}】`;
+      sums[4] = `加班总工时：【${totalHour}】`;
+      sums[5] = `加班费：【${totalPrice}】`;
       return sums;
     },
   },
