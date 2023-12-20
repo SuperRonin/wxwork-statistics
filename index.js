@@ -31,6 +31,14 @@ new Vue({
           id: "price",
         },
         {
+          label: "周末加班",
+          id: "isOffDayWork",
+        },
+        {
+          label: "快捷申请",
+          id: "quickApply",
+        },
+        {
           label: "是否早退",
           id: "isLeaveEarly",
         },
@@ -81,6 +89,7 @@ new Vue({
       let totalHour = 0;
       let isNoSignStartTime = false; //上班有漏卡
       let isNoSignEndTime = false; //下班有漏卡
+      let vacationCount = 0; //假期
       data.forEach((item, index) => {
         totalPrice += item.price;
         if (!isNaN(parseInt(item.timeDifference))) {
@@ -94,6 +103,7 @@ new Vue({
         if (item.startTime === "--") {
           isNoSignStartTime = true;
         }
+        if (item.isOffDayWork) vacationCount += 1;
       });
       sums.length = columns.length;
       sums[0] = "合计";
@@ -101,6 +111,7 @@ new Vue({
       if (isNoSignEndTime) sums[3] = "下班有漏卡";
       sums[4] = `加班总工时：【${totalHour}】`;
       sums[5] = `加班费：【${totalPrice}】`;
+      sums[6] = `可调休：【${vacationCount}】天`;
       return sums;
     },
   },

@@ -1,106 +1,82 @@
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>考勤报告</title>
-    <!-- 引入样式 -->
-    <!-- <link
-      rel="stylesheet"
-      href="//unpkg.com/element-ui/lib/theme-chalk/index.css"
-    /> -->
-    <link
-      rel="stylesheet"
-      href="//cdn.staticfile.org/element-ui/2.15.14/theme-chalk/index.min.css"
-    />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
-    </style>
-  </head>
-  <script src="//cdn.tailwindcss.com"></script>
-  <script src="//cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="//cdn.bootcdn.net/ajax/libs/dayjs/1.11.9/dayjs.min.js"></script>
-  <!-- <script src="//unpkg.com/vue@2/dist/vue.js"></script> -->
-  <script src="//cdn.bootcdn.net/ajax/libs/vue/2.7.2/vue.min.js"></script>
-  <!-- 引入组件库 -->
-  <!-- <script src="//unpkg.com/element-ui/lib/index.js"></script> -->
-  <script src="//cdn.staticfile.org/element-ui/2.15.14/index.min.js"></script>
-  <script src="./lib/index.js"></script>
-  <body>
-    <div id="app">
-     
-       <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <el-upload
-          drag
-          action=""
-          class="upload-demo"
-          :on-change="handleSelectFile"
-        >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          <div slot="tip" class="el-upload__tip">
-            <p>手机端企微：【打卡】【右下角统计】【右上角导出】</p>
-          </div>
-        </el-upload>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>考勤报告</title>
+  <link rel="stylesheet" href="//cdn.staticfile.org/element-ui/2.15.14/theme-chalk/index.min.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<script src="//cdn.tailwindcss.com"></script>
+<script src="//cdn.staticfile.org/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/dayjs/1.11.9/dayjs.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/vue/2.7.2/vue.min.js"></script>
+<!-- 引入组件库 -->
+<script src="//cdn.staticfile.org/element-ui/2.15.14/index.min.js"></script>
+<script src="./lib/index.js"></script>
 
+<body>
+  <div id="app">
 
-      <div v-if="tableData && tableData.length">
-        <div
-          class="fixed right-2 top-1/2 w-8 h-300px text-center text-white bg-violet-500 py-4 px-2 rounded z-10 cursor-pointer hover:bg-violet-600 select-none"
-          @click="tableData = []"
-        >
-          重新解析
+    <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <el-upload drag action="" class="upload-demo" :on-change="handleSelectFile">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div slot="tip" class="el-upload__tip">
+          <p>手机端企微：【打卡】【右下角统计】【右上角导出】</p>
         </div>
-        <div
-          class="fixed right-2 top-1/3 w-8 h-300px text-center text-white bg-violet-500 py-4 px-2 rounded z-10 cursor-pointer hover:bg-violet-600 select-none"
-          @click="handleCheckOverTime"
-        >
-          只看加班
-          <el-checkbox v-model="isCheckOverTime"></el-checkbox>
-        </div>
-      </div>
-
-      <el-table
-        v-if="tableData && tableData.length"
-        :data="tableData"
-        width="80%"
-        height="100vh"
-        show-summary
-        :summary-method="getSummaries"
-        border
-        stripe
-      >
-        <el-table-column
-          align="center"
-          v-for="col in columns"
-          :prop="col.id"
-          :key="col.id"
-          :label="col.label"
-          sortable
-        >
-          <template slot-scope="scope">
-            <span v-if="col.id === 'isLeaveEarly'">
-              <el-tag v-if="scope.row.isLeaveEarly" type="danger">是</el-tag>
-              <el-tag v-else type="success">否</el-tag>
-            </span>
-
-            <span v-else-if="col.id === 'timeDifference'">
-              <el-tag
-                v-if="scope.row.timeDifference >= 1"
-                effect="dark"
-                type="success"
-                >{{scope.row.timeDifference}}</el-tag
-              >
-              <el-tag v-else type="info">{{scope.row.timeDifference}}</el-tag>
-            </span>
-            <span v-else>{{ scope.row[col.id] }}</span>
-          </template>
-        </el-table-column>
-      </el-table>
+      </el-upload>
     </div>
 
-    <script src="./index.js"></script>
-  </body>
+
+    <div v-if="tableData && tableData.length">
+      <div
+        class="fixed right-2 top-1/2 w-8 h-300px text-center text-white bg-violet-500 py-4 px-2 rounded z-10 cursor-pointer hover:bg-violet-600 select-none"
+        @click="tableData = []">
+        重新解析
+      </div>
+      <div
+        class="fixed right-2 top-1/3 w-8 h-300px text-center text-white bg-violet-500 py-4 px-2 rounded z-10 cursor-pointer hover:bg-violet-600 select-none"
+        @click="handleCheckOverTime">
+        只看加班
+        <el-checkbox v-model="isCheckOverTime"></el-checkbox>
+      </div>
+    </div>
+
+    <el-table v-if="tableData && tableData.length" :data="tableData" width="80%" height="100vh" show-summary
+      :summary-method="getSummaries" border stripe>
+      <el-table-column align="center" v-for="col in columns" :prop="col.id" :key="col.id" :label="col.label" sortable>
+        <template slot-scope="scope">
+          <span v-if="col.id === 'isLeaveEarly'">
+            <el-tag v-if="scope.row.isLeaveEarly" type="danger">是</el-tag>
+            <el-tag v-else type="success">否</el-tag>
+          </span>
+          <span v-else-if="col.id === 'isOffDayWork'">
+            <el-tag v-if="scope.row.isOffDayWork" effect="dark" type="success">是</el-tag>
+            <el-tag v-else type="info">否</el-tag>
+          </span>
+          <span v-else-if="col.id === 'quickApply'">
+            <div v-if="scope.row.timeDifference != 0 || scope.row.isOffDayWork">
+              <p>{{scope.row.date}} {{scope.row.shouldEndTime}}</p>
+              <p class="mt-2">{{scope.row.date}} {{scope.row.actualEndTime}}</p>
+            </div>
+          </span>
+
+          <span v-else-if="col.id === 'timeDifference'">
+            <el-tag v-if="scope.row.timeDifference >= 1" effect="dark"
+              type="success">{{scope.row.timeDifference}}</el-tag>
+            <el-tag v-else type="info">{{scope.row.timeDifference}}</el-tag>
+          </span>
+          <span v-else>{{ scope.row[col.id] }}</span>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+
+  <script src="./index.js"></script>
+</body>
+
 </html>
