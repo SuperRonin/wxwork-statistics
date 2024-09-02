@@ -59,6 +59,8 @@ new Vue({
       });
       beginParse(event.raw)
         .then((res) => {
+          console.log("res", res);
+
           this.tableData = res;
           this.originData = res;
           loading.close();
